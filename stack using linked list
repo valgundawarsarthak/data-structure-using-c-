@@ -1,0 +1,118 @@
+5. Write a program that implement stack (its operations) using Linked List
+#include <stdio.h>
+#include <stdlib.h>
+/* Definition of Node */
+struct node
+{
+int data;
+struct node *next;
+};
+struct node *top = NULL;
+/* Function Prototypes */
+void push();
+void pop();
+void peek();
+void traverse();
+int count(); // Change 1: Count function
+/* Main Function */
+int main()
+{
+int choice;
+while(1)
+{
+printf("\n--- Stack Menu ---\n");
+printf("1. Push\n");
+printf("2. Pop\n");
+printf("3. Peek\n");
+printf("4. Traverse\n");
+printf("5. Count Elements\n"); // Change 2: New option
+printf("6. Exit\n"); // Change 3: Exit shifted
+printf("Enter your choice: ");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1: push(); break;
+case 2: pop(); break;
+case 3: peek(); break;
+case 4: traverse(); break;
+case 5: printf("Total elements = %d\n", count()); break;
+case 6: exit(0);
+default: printf("Invalid choice\n");
+}
+}
+return 0;
+}
+/* Push Operation */
+void push()
+{
+int value;
+struct node *newnode;
+newnode = (struct node*)malloc(sizeof(struct node));
+// Change 4: Memory check
+if(newnode == NULL)
+{
+printf("Heap Overflow\n");
+return;
+}
+printf("Enter value to push: ");
+scanf("%d",&value);
+newnode->data = value;
+newnode->next = top;
+top = newnode;
+printf("Element %d inserted\n", value);
+}
+/* Pop Operation */
+void pop()
+{
+struct node *temp;
+if(top == NULL)
+{
+printf("Stack Underflow\n");
+return;
+}
+temp = top;
+printf("Deleted element is %d\n", temp->data);
+top = top->next;
+free(temp);
+}
+/* Peek Operation */
+void peek()
+{
+if(top == NULL)
+{
+printf("Stack is empty\n");
+return;
+}
+printf("Top element is %d\n", top->data);
+}
+/* Traverse Stack */
+void traverse()
+{
+struct node *temp;
+if(top == NULL)
+{
+printf("Stack is empty\n");
+return;
+}
+temp = top;
+printf("Stack elements are:\n");
+while(temp != NULL)
+{
+printf("%d -> ", temp->data); // Change 5: Better display
+temp = temp->next;
+}
+printf("NULL\n");
+}
+/* Count Elements */
+int count()
+{
+struct node *temp = top;
+int c = 0;
+while(temp != NULL)
+{
+c++;
+temp = temp->next;
+}
+return 0;
+}
+ 
