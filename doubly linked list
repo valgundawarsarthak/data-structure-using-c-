@@ -1,0 +1,158 @@
+Write a program that uses functions to perform the following operations on doubly linked list: i. Creation ii. Insertion iii. Deletion iv. Traversal 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Definition of node */
+struct node {
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+/* Function Prototypes */
+void create();
+void insert();
+void deletee();
+void traverse();
+
+/* Main Function */
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n--- Doubly Linked List Menu ---\n");
+        printf("1. Create\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Delete from End\n");
+        printf("4. Traverse\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: create();
+                    break;
+            case 2: insert();
+                    break;
+            case 3: deletee();
+                    break;
+            case 4: traverse();
+                    break;
+            case 5: exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
+
+/* Create Doubly Linked List */
+void create() {
+    int n, i, value;
+    struct node *temp, *newnode;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        newnode = (struct node *)malloc(sizeof(struct node));
+
+        printf("Enter data: ");
+        scanf("%d", &value);
+
+        newnode->data = value;
+        newnode->prev = NULL;
+        newnode->next = NULL;
+
+        if (head == NULL) {
+            head = newnode;
+        } else {
+            temp = head;
+            while (temp->next != NULL)
+                temp = temp->next;
+
+            temp->next = newnode;
+            newnode->prev = temp;
+        }
+    }
+}
+
+/* Insert at Beginning */
+void insert() {
+    int value;
+    struct node *newnode;
+
+    newnode = (struct node *)malloc(sizeof(struct node));
+
+    printf("Enter value to insert: ");
+    scanf("%d", &value);
+
+    newnode->data = value;
+    newnode->prev = NULL;
+    newnode->next = head;
+
+    if (head != NULL) {
+        head->prev = newnode;
+    }
+
+    head = newnode;
+}
+
+/* Delete from End */
+void deletee() {
+    struct node *temp;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    temp = head;
+
+    /* If only one node */
+    if (temp->next == NULL) {
+        head = NULL;
+        free(temp);
+        printf("Last node deleted\n");
+        return;
+    }
+
+    /* Traverse to last node */
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    /* Remove last node */
+    temp->prev->next = NULL;
+    free(temp);
+
+    printf("Last node deleted\n");
+}
+
+/* Traverse*/
+void traverse() {
+    struct node *temp;
+
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    printf("Forward Traversal: ");
+    temp = head;
+
+    while (temp->next != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("%d\n", temp->data);
+
+    printf("Backward Traversal: ");
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
