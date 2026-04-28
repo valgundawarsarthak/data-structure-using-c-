@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Change 1: typedef for struct */
+typedef struct node
+{
+    int data;
+    struct node *next;
+} Node;
+
+Node *front = NULL, *rear = NULL;
+int size = 0;   // Change 2: size counter
+
+/* Function declarations */
+void enqueue(int value);      // Change 3: parameter added
+void dequeue();
+void peek();
+void display();
+int isEmpty();                // Change 4: new function
+void clearQueue();            // Change 5: new function
+
+int main()
+{
+    int choice, value;
+
+    while(1)
+    {
+        printf("\n--- Queue Using Linked List ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Clear Queue\n");  // Change 6
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+
+        if(scanf("%d", &choice) != 1)  // Change 7: input validation
+        {
+            printf("Invalid input\n");
+            exit(0);
+        }
+
+        switch(choice)
+        {
+            case 1:
+                printf("Enter element to insert: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+            case 2: dequeue(); break;
+            case 3: peek(); break;
+            case 4: display(); break;
+            case 5: clearQueue(); break;
+            case 6:
+                printf("Exiting program...\n");  // Change 8
+                exit(0);
+            default: printf("Invalid choice\n");
+        }
+    }
+}
+
+/* Enqueue */
+void enqueue(int value)
+{
+    Node *ptr = (Node*)malloc(sizeof(Node));
+
+    if(ptr == NULL)
+    {
+        printf("Queue Overflow\n");
+        return;
+    }
+
+    ptr->data = value;
+    ptr->next = NULL;
+
+    if(rear == NULL)
+        front = rear = ptr;
+    else
+    {
+        rear->next = ptr;
+        rear = ptr;
+    }
+
+    size++;
+    printf("Inserted: %d\n", value);
+}
+
+/* Dequeue */
+void dequeue()
+{
+    if(isEmpty())
+    {
+        printf("Queue Underflow\n");
+        return;
+    }
+
+    Node *temp = front;
+    printf("Deleted: %d\n", temp->data);
+
+    front = front->next;
+
+    if(front == NULL)
+        rear = NULL;
+
+    free(temp);
+    size--;
+}
+
+/* Peek */
+void peek()
+{
+    if(isEmpty())
+    {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    printf("Front element: %d\n", front->data);
+}
+
+/* Display */
+void display()
+{
+    if(isEmpty())
+    {
+        printf("Queue is empty\n");
+        return;
+    }
+
+    Node *temp = front;
+
+    printf("Queue (%d elements): ", size);  // Improved display
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+/* Check empty */
+int isEmpty()
+{
+    return front == NULL;
+}
+
+/* Clear queue */
+void clearQueue()
+{
+    while(!isEmpty())
+        dequeue();
+
+    printf("Queue cleared\n");
+}
