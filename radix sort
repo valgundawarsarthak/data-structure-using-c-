@@ -1,0 +1,110 @@
+Write a program that implement radix sort a given list of integers in ascending order? 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to find maximum element
+int getMax(int arr[], int n) {
+    int max = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > max)
+            max = arr[i];
+    return max;
+}
+
+// Function to find minimum element (NEW - for negative handling)
+// Function to find minimum element (NEW - for negative handling)
+
+int getMin(int arr[], int n) {
+    int min = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] < min)
+            min = arr[i];
+    return min;
+}
+
+// Counting Sort (for a specific digit)
+void countingSort(int arr[], int n, int exp) {
+    int *output = (int *)malloc(n * sizeof(int)); // dynamic allocation
+    int count[10] = {0};
+
+    // Count occurrences
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+
+    // Cumulative count
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    // Build output (stable)
+    for (int i = n - 1; i >= 0; i--) {
+        int digit = (arr[i] / exp) % 10;
+        output[count[digit] - 1] = arr[i];
+        count[digit]--;
+    }
+
+    // Copy back
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+
+    free(output); // free memory
+}
+
+// Radix Sort function (UPDATED for negatives)
+void radixSort(int arr[], int n) {
+    int min = getMin(arr, n);
+
+    // Shift array if negatives exist
+    if (min < 0) {
+        for (int i = 0; i < n; i++)
+            arr[i] -= min;
+    }
+
+    int max = getMax(arr, n);
+
+    for (int exp = 1; max / exp > 0; exp *= 10)
+        countingSort(arr, n, exp);
+
+    // Shift back
+    if (min < 0) {
+        for (int i = 0; i < n; i++)
+            arr[i] += min;
+    }
+}
+
+// Display function (renamed)
+void displayArray(int arr[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+// Driver code
+int main() {
+    int n;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    // Input validation
+    if (n <= 0) {
+        printf("Invalid size!\n");
+        return 1;
+    }
+
+    int *arr = (int *)malloc(n * sizeof(int));
+
+    printf("Enter elements:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+         radixSort(arr, n);
+
+    printf("Sorted array:\n");
+    displayArray(arr, n);
+
+    free(arr); // free memory
+
+    return 0;
+}
+
+    radixSort(arr, n);
