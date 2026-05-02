@@ -1,0 +1,88 @@
+ Write a program to implement the tree traversal methods (Recursive and Non Recursive)
+NON  RECURSIVE TREE TRAVERSAL:- 
+#include <stdio.h>
+#include <stdlib.h>
+struct node
+{
+ int data;
+ struct node *left, *right;
+};
+/* Stack */
+struct node *stack[50];
+int top = -1;
+/* Stack operations */
+void push(struct node *x)
+{
+ stack[++top] = x;
+}
+struct node* pop()
+{
+ return stack[top--];
+}
+/* Insert node into BST */
+struct node* insert(struct node* root, int data)
+{
+ if (root == NULL)
+ {
+ root = (struct node*)malloc(sizeof(struct node));
+ root->data = data;
+ root->left = root->right = NULL;
+ }
+ else if (data < root->data)
+ root->left = insert(root->left, data);
+ else
+ root->right = insert(root->right, data);
+ return root;
+}
+/* Non-Recursive Inorder Traversal */
+void inorderNR(struct node* root)
+{
+ struct node* temp = root;
+ while (temp != NULL || top != -1)
+ {
+ while (temp != NULL)
+ {
+ push(temp);
+ temp = temp->left;
+ }
+ temp = pop();
+ printf("%d ", temp->data);
+ temp = temp->right;
+ }
+}
+/* Non-Recursive Preorder Traversal */
+void preorderNR(struct node* root)
+{
+ struct node* temp = root;
+ while (temp != NULL || top != -1)
+ {
+ while (temp != NULL)
+ {
+ printf("%d ", temp->data);
+ push(temp);
+ temp = temp->left;
+ }
+ temp = pop();
+ temp = temp->right;
+ }
+}
+/* Main function */
+int main()
+{
+ struct node* root = NULL;
+ int n, i, val;
+ printf("Enter number of nodes: ");
+ scanf("%d", &n);
+ printf("Enter elements:\n");
+ for (i = 0; i < n; i++)
+ {
+ scanf("%d", &val);
+ root = insert(root, val);
+ }
+ printf("\nNon-Recursive Inorder: ");
+ inorderNR(root);
+ top = -1; /* reset stack */
+ printf("\nNon-Recursive Preorder: ");
+ preorderNR(root);
+ return 0;
+}
