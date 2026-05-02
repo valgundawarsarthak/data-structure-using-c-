@@ -1,0 +1,108 @@
+ Write a program to implement the tree traversal methods (Recursive and Non Recursive)
+ RECURSIVE TREE TRAVERSAL
+#include <stdio.h>
+#include <stdlib.h>
+struct node
+{
+ int data;
+ struct node *left, *right;
+};
+/* Stack for non-recursive traversal */
+struct node *stack[50];
+int top = -1;
+/* Function declarations */
+struct node* insert(struct node*, int);
+void inorderR(struct node*);
+void preorderR(struct node*);
+void postorderR(struct node*);
+void inorderNR(struct node*);
+void push(struct node*);
+struct node* pop();
+/* Insert node into BST */
+struct node* insert(struct node* root, int data)
+{
+ if (root == NULL)
+ {
+ root = (struct node*)malloc(sizeof(struct node));
+ root->data = data;
+ root->left = root->right = NULL;
+ }
+ else if (data < root->data)
+ root->left = insert(root->left, data);
+ else
+ root->right = insert(root->right, data);
+ return root;
+}
+/* Recursive Traversals */
+void inorderR(struct node* root)
+{
+if (root != NULL)
+ {
+ inorderR(root->left);
+ printf("%d ", root->data);
+ inorderR(root->right);
+ }
+}
+void preorderR(struct node* root)
+{
+ if (root != NULL)
+ {
+ printf("%d ", root->data);
+ preorderR(root->left);
+ preorderR(root->right);
+ }
+}
+void postorderR(struct node* root)
+{
+ if (root != NULL)
+ {
+ postorderR(root->left);
+ postorderR(root->right);
+ printf("%d ", root->data);
+ }
+}
+/* Stack operations */
+void push(struct node* x)
+{
+ stack[++top] = x;
+}
+struct node* pop()
+{
+ return stack[top--];
+}
+/* Non-Recursive Inorder Traversal */
+void inorderNR(struct node* root)
+{
+ struct node* temp = root;
+ while (temp != NULL || top != -1){
+ push(temp);
+ temp = temp->left;
+ }
+ temp = pop();
+ printf("%d ", temp->data);
+ temp = temp->right;
+ }
+}
+/* Main function */
+int main()
+{
+ struct node* root = NULL;
+ int n, i, val;
+ printf("Enter number of nodes: ");
+ scanf("%d", &n);
+ printf("Enter elements:\n");
+ for (i = 0; i < n; i++)
+ {
+ scanf("%d", &val);
+ root = insert(root, val);
+ }
+ printf("\nRecursive Inorder: ");
+ inorderR(root);
+ printf("\nRecursive Preorder: ");
+ preorderR(root);
+ printf("\nRecursive Postorder: ");
+ postorderR(root);
+ printf("\nNon-Recursive Inorder: ");
+ inorderNR(root);
+ return 0;
+}
